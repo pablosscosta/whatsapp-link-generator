@@ -29,6 +29,10 @@ atendente pode perder a comissão.
 - QR code exibido na tela e para baixar em PNG (1024 px) ou SVG.
 - Ao editar o formulário, o resultado anterior some, para não divulgar um link desatualizado.
 
+O link e o QR code **não expiram** e não dependem deste site: o QR code guarda o próprio link
+`wa.me`, então continua funcionando mesmo se o site sair do ar. Em compensação, não dá para editá-los
+depois de divulgados; para mudar o número ou a mensagem, é preciso gerar um novo.
+
 Nada é salvo: tudo acontece no navegador.
 
 ## Tecnologias
