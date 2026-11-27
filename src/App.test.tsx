@@ -172,9 +172,9 @@ describe('App', () => {
 
     await user.type(screen.getByLabelText('Mensagem pronta'), 'Oi');
 
-    expect(screen.getByText('2/500 caracteres')).toBeInTheDocument();
+    expect(screen.getByText('2/500')).toBeInTheDocument();
     expect(screen.getByLabelText('Mensagem pronta')).toHaveAccessibleDescription(
-      /só precisa tocar em enviar/,
+      'Opcional. O cliente recebe esse texto já escrito e só precisa tocar em enviar. 2/500 caracteres',
     );
   });
 

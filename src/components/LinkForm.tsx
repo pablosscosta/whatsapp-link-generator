@@ -75,12 +75,15 @@ export function LinkForm({ onGenerate, onEdit }: LinkFormProps) {
             onEdit();
           }}
         />
-        <p id="message-hint" className="hint">
-          Opcional. O cliente recebe esse texto já escrito e só precisa tocar em enviar.
-        </p>
-        <p id="message-count" className="hint">
-          {message.length}/{MESSAGE_MAX_LENGTH} caracteres
-        </p>
+        <div className="field-hints">
+          <p id="message-hint" className="hint">
+            Opcional. O cliente recebe esse texto já escrito e só precisa tocar em enviar.
+          </p>
+          <p id="message-count" className="hint counter">
+            {message.length}/{MESSAGE_MAX_LENGTH}{' '}
+            <span className="visually-hidden">caracteres</span>
+          </p>
+        </div>
       </div>
 
       <button type="submit" className="button button-primary">

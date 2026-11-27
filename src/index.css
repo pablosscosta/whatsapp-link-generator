@@ -151,6 +151,18 @@ input[aria-invalid='true'] {
   margin: 0.25rem 0 0;
 }
 
+.field-hints {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.counter {
+  flex-shrink: 0;
+  font-variant-numeric: tabular-nums;
+}
+
 .visually-hidden {
   position: absolute;
   width: 1px;
