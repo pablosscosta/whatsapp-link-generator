@@ -1,6 +1,6 @@
 import { useState, type SubmitEvent } from 'react';
 import { normalizeBrazilianPhone, type PhoneError } from '../lib/phone';
-import { buildWhatsAppLink } from '../lib/whatsappLink';
+import { createWhatsAppLink, type WhatsAppLink } from '../lib/whatsappLink';
 
 export const MESSAGE_MAX_LENGTH = 500;
 
@@ -12,7 +12,7 @@ const PHONE_ERRORS: Record<PhoneError, string> = {
 };
 
 type LinkFormProps = {
-  onGenerate: (link: string) => void;
+  onGenerate: (link: WhatsAppLink) => void;
   onEdit: () => void;
 };
 
@@ -29,11 +29,11 @@ export function LinkForm({ onGenerate, onEdit }: LinkFormProps) {
       return;
     }
     setPhoneError(null);
-    onGenerate(buildWhatsAppLink(result.value, message));
+    onGenerate(createWhatsAppLink(result.value, message));
   }
 
   return (
-    <form className="card" onSubmit={handleSubmit} noValidate>
+    <form className="card form" onSubmit={handleSubmit} noValidate>
       <div className="field">
         <label htmlFor="phone">Número do WhatsApp</label>
         <input

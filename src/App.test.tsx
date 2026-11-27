@@ -1,4 +1,4 @@
-import { render, screen } from '@testing-library/react';
+import { render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import QRCode from 'qrcode';
 import { App } from './App';
@@ -18,10 +18,12 @@ async function generateLink(phone: string, message = 'Olá! Quero ser atendido p
 }
 
 describe('App', () => {
-  it('generates the link, the open button and the QR code', async () => {
+  it('shows who the client will talk to, the message and the QR code', async () => {
     await generateLink('(11) 90000-0000');
 
-    expect(screen.getByText(EXPECTED_LINK)).toBeInTheDocument();
+    const result = screen.getByRole('region', { name: 'Seu link está pronto' });
+    expect(within(result).getByText('+55 (11) 90000-0000')).toBeInTheDocument();
+    expect(within(result).getByText('Olá! Quero ser atendido pela Ana.')).toBeInTheDocument();
     expect(screen.getByRole('link', { name: 'Abrir no WhatsApp' })).toHaveAttribute(
       'href',
       EXPECTED_LINK,
@@ -37,7 +39,7 @@ describe('App', () => {
 
     expect(screen.getByRole('alert')).toHaveTextContent('DDD inválido.');
     expect(screen.getByLabelText('Número do WhatsApp')).toHaveAttribute('aria-invalid', 'true');
-    expect(screen.queryByRole('heading', { name: 'Seu link' })).not.toBeInTheDocument();
+    expect(screen.queryByRole('heading', { name: 'Seu link está pronto' })).not.toBeInTheDocument();
   });
 
   it('asks for the number when it is empty', async () => {
@@ -51,11 +53,11 @@ describe('App', () => {
 
   it('hides the previous result when the form is edited', async () => {
     const user = await generateLink('(11) 90000-0000');
-    expect(screen.getByRole('heading', { name: 'Seu link' })).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: 'Seu link está pronto' })).toBeInTheDocument();
 
     await user.type(screen.getByLabelText('Mensagem pronta'), ' Obrigado!');
 
-    expect(screen.queryByRole('heading', { name: 'Seu link' })).not.toBeInTheDocument();
+    expect(screen.queryByRole('heading', { name: 'Seu link está pronto' })).not.toBeInTheDocument();
   });
 
   it('copies the link to the clipboard', async () => {
@@ -74,7 +76,18 @@ describe('App', () => {
 
     await user.click(screen.getByRole('button', { name: 'Copiar link' }));
 
-    expect(screen.getByRole('status')).toHaveTextContent('Não foi possível copiar');
+    expect(screen.getByRole('alert')).toHaveTextContent('Não foi possível copiar');
+    expect(screen.getByRole('textbox', { name: 'Link gerado' })).toHaveValue(EXPECTED_LINK);
+  });
+
+  it('says the chat opens empty when there is no message', async () => {
+    await generateLink('11900000000', '');
+
+    expect(screen.getByText('Nenhuma: a conversa abre sem texto.')).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: 'Abrir no WhatsApp' })).toHaveAttribute(
+      'href',
+      'https://wa.me/5511900000000',
+    );
   });
 
   it('counts the message characters', async () => {

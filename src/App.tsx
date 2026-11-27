@@ -1,9 +1,10 @@
 import { useState } from 'react';
 import { LinkForm } from './components/LinkForm';
 import { LinkResult } from './components/LinkResult';
+import type { WhatsAppLink } from './lib/whatsappLink';
 
 export function App() {
-  const [link, setLink] = useState<string | null>(null);
+  const [link, setLink] = useState<WhatsAppLink | null>(null);
 
   return (
     <main className="app">
