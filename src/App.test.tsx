@@ -1,4 +1,4 @@
-import { render, screen, within } from '@testing-library/react';
+import { act, render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import QRCode from 'qrcode';
 import { App } from './App';
@@ -6,8 +6,11 @@ import { App } from './App';
 const EXPECTED_LINK =
   'https://wa.me/5511900000000?text=Ol%C3%A1!%20Quero%20ser%20atendido%20pela%20Ana.';
 
-async function generateLink(phone: string, message = 'Olá! Quero ser atendido pela Ana.') {
-  const user = userEvent.setup();
+async function generateLink(
+  phone: string,
+  message = 'Olá! Quero ser atendido pela Ana.',
+  user = userEvent.setup(),
+) {
   render(<App />);
   await user.type(screen.getByLabelText('Número do WhatsApp'), phone);
   if (message) {
@@ -18,6 +21,10 @@ async function generateLink(phone: string, message = 'Olá! Quero ser atendido p
 }
 
 describe('App', () => {
+  afterEach(() => {
+    vi.useRealTimers();
+  });
+
   it('shows who the client will talk to, the message and the QR code', async () => {
     await generateLink('(11) 90000-0000');
 
@@ -65,8 +72,27 @@ describe('App', () => {
 
     await user.click(screen.getByRole('button', { name: 'Copiar link' }));
 
+    expect(screen.getByRole('button', { name: 'Copiado!' })).toBeInTheDocument();
     expect(screen.getByRole('status')).toHaveTextContent('Link copiado!');
     await expect(navigator.clipboard.readText()).resolves.toBe(EXPECTED_LINK);
+  });
+
+  it('restores the copy button after two seconds', async () => {
+    vi.useFakeTimers({ shouldAdvanceTime: true });
+    const user = userEvent.setup({
+      advanceTimers: (ms) => {
+        vi.advanceTimersByTime(ms);
+      },
+    });
+    await generateLink('(11) 90000-0000', 'Oi', user);
+    await user.click(screen.getByRole('button', { name: 'Copiar link' }));
+
+    act(() => {
+      vi.advanceTimersByTime(2000);
+    });
+
+    expect(screen.getByRole('button', { name: 'Copiar link' })).toBeInTheDocument();
+    expect(screen.getByRole('status')).toBeEmptyDOMElement();
   });
 
   it('moves the focus to the result', async () => {

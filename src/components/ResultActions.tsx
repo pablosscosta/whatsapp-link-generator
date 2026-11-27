@@ -1,9 +1,11 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import type { QrCodeState } from '../hooks/useQrCode';
 import { QR_FILE_NAME } from '../lib/qrCode';
 import type { WhatsAppLink } from '../lib/whatsappLink';
 
 type CopyStatus = 'idle' | 'copied' | 'failed';
+
+const COPIED_FEEDBACK_MS = 2000;
 
 type ResultActionsProps = {
   link: WhatsAppLink;
@@ -12,6 +14,17 @@ type ResultActionsProps = {
 
 export function ResultActions({ link, qrCode }: ResultActionsProps) {
   const [copyStatus, setCopyStatus] = useState<CopyStatus>('idle');
+
+  // "Copiado!" replaces the button label for a moment, then the button resets.
+  useEffect(() => {
+    if (copyStatus !== 'copied') return;
+    const timer = setTimeout(() => {
+      setCopyStatus('idle');
+    }, COPIED_FEEDBACK_MS);
+    return () => {
+      clearTimeout(timer);
+    };
+  }, [copyStatus]);
 
   async function copyLink() {
     try {
@@ -31,7 +44,7 @@ export function ResultActions({ link, qrCode }: ResultActionsProps) {
           className="button button-primary button-wide"
           onClick={() => void copyLink()}
         >
-          Copiar link
+          {copyStatus === 'copied' ? 'Copiado!' : 'Copiar link'}
         </button>
         {qrCode.status === 'ready' && (
           <>
@@ -48,8 +61,8 @@ export function ResultActions({ link, qrCode }: ResultActionsProps) {
         </a>
       </div>
 
-      <p className="status" role="status">
-        {copyStatus === 'copied' && 'Link copiado!'}
+      <p className="visually-hidden" role="status">
+        {copyStatus === 'copied' ? 'Link copiado!' : ''}
       </p>
       {copyStatus === 'failed' && (
         <div className="copy-fallback">
