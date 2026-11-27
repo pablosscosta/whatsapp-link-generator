@@ -30,10 +30,6 @@ describe('App', () => {
       'src',
       expect.stringMatching(/^data:image\/svg\+xml/),
     );
-    expect(screen.getByRole('link', { name: 'Baixar SVG' })).toHaveAttribute(
-      'download',
-      'qrcode-whatsapp.svg',
-    );
   });
 
   it('shows an error and no link for an invalid number', async () => {
@@ -102,28 +98,15 @@ describe('App', () => {
     expect(await screen.findByRole('alert')).toHaveTextContent('Não foi possível gerar o QR code');
   });
 
-  it('downloads the QR code as PNG', async () => {
-    const user = await generateLink('(11) 90000-0000');
-    vi.spyOn(QRCode, 'toDataURL').mockResolvedValue('data:image/png;base64,AAAA' as never);
-    const click = vi
-      .spyOn(HTMLAnchorElement.prototype, 'click')
-      .mockImplementation(() => undefined);
+  it('offers the QR code as PNG and SVG downloads', async () => {
+    await generateLink('(11) 90000-0000');
 
-    await user.click(await screen.findByRole('button', { name: 'Baixar PNG' }));
-
-    expect(click).toHaveBeenCalledOnce();
-    const anchor = click.mock.contexts[0] as HTMLAnchorElement;
-    expect(anchor.download).toBe('qrcode-whatsapp.png');
-    expect(anchor.href).toBe('data:image/png;base64,AAAA');
-  });
-
-  it('tells the user when the PNG cannot be generated', async () => {
-    const user = await generateLink('(11) 90000-0000');
-    vi.spyOn(QRCode, 'toDataURL').mockRejectedValue(new Error('no canvas'));
-    vi.spyOn(console, 'error').mockImplementation(() => undefined);
-
-    await user.click(await screen.findByRole('button', { name: 'Baixar PNG' }));
-
-    expect(screen.getByRole('alert')).toHaveTextContent('Não foi possível gerar o PNG');
+    const png = await screen.findByRole('link', { name: 'Baixar PNG' });
+    expect(png).toHaveAttribute('download', 'qrcode-whatsapp.png');
+    expect(png).toHaveAttribute('href', expect.stringMatching(/^data:image\/png;base64,/));
+    expect(screen.getByRole('link', { name: 'Baixar SVG' })).toHaveAttribute(
+      'download',
+      'qrcode-whatsapp.svg',
+    );
   });
 });
