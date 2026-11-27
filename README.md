@@ -12,7 +12,9 @@ para que quem vem pela divulgação de um atendente chegue identificado.
 
 **https://pablosscosta.github.io/whatsapp-link-generator/**
 
-<!-- TODO(Pablo): GIF em docs/assets/ com dados fictícios. -->
+![Demonstração com dados fictícios: o mesmo link gerado no desktop e no celular, com resumo, QR code e a confirmação "Copiado!"](docs/assets/demo.gif)
+
+_Demonstração com dados fictícios, gravada com o Playwright ([como regravar](docs/demo/README.md))._
 
 ## O problema
 

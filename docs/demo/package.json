@@ -1,0 +1,15 @@
+{
+  "name": "whatsapp-link-generator-demo",
+  "private": true,
+  "description": "Records the demo video of the app with fictional data (dev-only tool).",
+  "type": "module",
+  "scripts": {
+    "record": "node record.mjs"
+  },
+  "devDependencies": {
+    "playwright": "1.60.0"
+  },
+  "engines": {
+    "node": ">=24"
+  }
+}
