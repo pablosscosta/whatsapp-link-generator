@@ -1,4 +1,4 @@
-import { buildWhatsAppLink } from './whatsappLink';
+import { buildWhatsAppLink, createWhatsAppLink } from './whatsappLink';
 
 describe('buildWhatsAppLink', () => {
   it('pre-fills the encoded message', () => {
@@ -24,5 +24,15 @@ describe('buildWhatsAppLink', () => {
 
   it('omits the text parameter when the message is blank', () => {
     expect(buildWhatsAppLink('5511900000000', '  \n ')).toBe('https://wa.me/5511900000000');
+  });
+});
+
+describe('createWhatsAppLink', () => {
+  it('keeps the phone and the trimmed message next to the link', () => {
+    expect(createWhatsAppLink('5511900000000', '  Oi  ')).toEqual({
+      phone: '5511900000000',
+      message: 'Oi',
+      url: 'https://wa.me/5511900000000?text=Oi',
+    });
   });
 });

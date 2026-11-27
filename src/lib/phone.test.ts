@@ -1,4 +1,4 @@
-import { normalizeBrazilianPhone } from './phone';
+import { formatBrazilianPhone, normalizeBrazilianPhone } from './phone';
 
 describe('normalizeBrazilianPhone', () => {
   it.each([
@@ -32,5 +32,14 @@ describe('normalizeBrazilianPhone', () => {
     ['(11) 9000-0000', 'invalid-number'],
   ])('rejects %j with %s', (input, error) => {
     expect(normalizeBrazilianPhone(input)).toEqual({ ok: false, error });
+  });
+});
+
+describe('formatBrazilianPhone', () => {
+  it.each([
+    ['5511900000000', '+55 (11) 90000-0000'],
+    ['552130000000', '+55 (21) 3000-0000'],
+  ])('formats %s as %s', (normalized, expected) => {
+    expect(formatBrazilianPhone(normalized)).toBe(expected);
   });
 });

@@ -1,45 +1,44 @@
-import { useState } from 'react';
-import { QrCode } from './QrCode';
-
-type CopyStatus = 'idle' | 'copied' | 'failed';
+import { useEffect, useRef } from 'react';
+import { useQrCode } from '../hooks/useQrCode';
+import type { WhatsAppLink } from '../lib/whatsappLink';
+import { MessagePreview } from './MessagePreview';
+import { QrCodeImage } from './QrCodeImage';
+import { ResultActions } from './ResultActions';
 
 type LinkResultProps = {
-  link: string;
+  link: WhatsAppLink;
 };
 
 export function LinkResult({ link }: LinkResultProps) {
-  const [copyStatus, setCopyStatus] = useState<CopyStatus>('idle');
+  const qrCode = useQrCode(link.url);
+  const sectionRef = useRef<HTMLElement>(null);
+  const headingRef = useRef<HTMLHeadingElement>(null);
 
-  async function copyLink() {
-    try {
-      await navigator.clipboard.writeText(link);
-      setCopyStatus('copied');
-    } catch (error) {
-      console.error('Failed to copy link', error);
-      setCopyStatus('failed');
+  // `link` is a new object on every "Gerar link", so the result is revealed each time.
+  useEffect(() => {
+    if (sectionRef.current && headingRef.current) {
+      revealResult(sectionRef.current, headingRef.current);
     }
-  }
+  }, [link]);
 
   return (
-    <section className="card" aria-labelledby="result-title">
-      <h2 id="result-title">Seu link</h2>
-      <p className="link">{link}</p>
-
-      <div className="actions">
-        <button type="button" className="button button-primary" onClick={() => void copyLink()}>
-          Copiar link
-        </button>
-        <a className="button" href={link} target="_blank" rel="noopener noreferrer">
-          Abrir no WhatsApp
-        </a>
-      </div>
-      <p className="status" role="status">
-        {copyStatus === 'copied' && 'Link copiado!'}
-        {copyStatus === 'failed' &&
-          'Não foi possível copiar. Selecione o link e copie manualmente.'}
-      </p>
-
-      <QrCode link={link} />
+    <section ref={sectionRef} className="card result" aria-labelledby="result-title">
+      <h2 id="result-title" ref={headingRef} tabIndex={-1}>
+        Seu link está pronto
+      </h2>
+      <MessagePreview phone={link.phone} message={link.message} />
+      <QrCodeImage qrCode={qrCode} />
+      <ResultActions link={link} qrCode={qrCode} />
     </section>
   );
+}
+
+// Moves focus to the result, so screen readers announce it, and scrolls to it
+// when it is not fully visible (on phones it renders below the form).
+function revealResult(section: HTMLElement, heading: HTMLElement) {
+  heading.focus({ preventScroll: true });
+  const { top, bottom } = section.getBoundingClientRect();
+  if (top < 0 || bottom > window.innerHeight) {
+    section.scrollIntoView({ block: 'start' });
+  }
 }

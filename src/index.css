@@ -7,6 +7,7 @@
   --color-primary: #0f766e;
   --color-primary-text: #ffffff;
   --color-error: #b91c1c;
+  --color-bubble: #e2e8f0;
 
   color-scheme: light dark;
   font-family:
@@ -30,6 +31,7 @@
     --color-primary: #2dd4bf;
     --color-primary-text: #042f2e;
     --color-error: #f87171;
+    --color-bubble: #334155;
   }
 }
 
@@ -43,6 +45,12 @@ body {
   margin: 0;
 }
 
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
+}
+
 .app {
   max-width: 40rem;
   margin: 0 auto;
@@ -52,6 +60,17 @@ body {
 h1 {
   font-size: 1.75rem;
   margin: 0 0 0.5rem;
+}
+
+.title {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  line-height: 1.2;
+}
+
+.title img {
+  flex-shrink: 0;
 }
 
 .lead {
@@ -73,7 +92,39 @@ a {
   border: 1px solid var(--color-border);
   border-radius: 0.75rem;
   padding: 1.25rem;
+}
+
+.layout {
+  display: grid;
+  gap: 1.5rem;
+  align-items: start;
   margin-bottom: 1.5rem;
+}
+
+/* Only useful next to the form, in the two-column layout. */
+.placeholder {
+  display: none;
+}
+
+@media (min-width: 56rem) {
+  .app {
+    max-width: 64rem;
+  }
+
+  .layout {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .placeholder {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 20rem;
+    color: var(--color-muted);
+    text-align: center;
+    background: transparent;
+    border-style: dashed;
+  }
 }
 
 .field {
@@ -105,15 +156,43 @@ input[aria-invalid='true'] {
   border-color: var(--color-error);
 }
 
-.hint,
-.status {
+.hint {
   color: var(--color-muted);
   font-size: 0.875rem;
   margin: 0.25rem 0 0;
 }
 
-.status:empty {
-  display: none;
+.field-hints {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.counter {
+  flex-shrink: 0;
+  font-variant-numeric: tabular-nums;
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
+.footer {
+  color: var(--color-muted);
+  font-size: 0.875rem;
+}
+
+.footer p {
+  margin: 0.25rem 0;
 }
 
 .error {
@@ -123,7 +202,11 @@ input[aria-invalid='true'] {
 }
 
 .button {
-  display: inline-block;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 2.75rem;
+  text-align: center;
   font: inherit;
   font-weight: 600;
   text-decoration: none;
@@ -147,25 +230,48 @@ textarea:focus-visible {
   outline-offset: 2px;
 }
 
-.actions {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem;
-  margin-top: 0.75rem;
+.form .button-primary {
+  width: 100%;
 }
 
-.link {
-  font-family: ui-monospace, monospace;
-  font-size: 0.875rem;
-  overflow-wrap: anywhere;
-  background: var(--color-bg);
-  border-radius: 0.5rem;
-  padding: 0.75rem;
+.summary {
+  display: grid;
+  gap: 0.25rem;
   margin: 0;
 }
 
+.summary dt {
+  color: var(--color-muted);
+  font-size: 0.875rem;
+}
+
+.summary dd {
+  margin: 0 0 0.5rem;
+}
+
+.summary-phone {
+  font-weight: 600;
+  font-size: 1.125rem;
+}
+
+.bubble {
+  display: inline-block;
+  max-width: 100%;
+  margin: 0;
+  padding: 0.6rem 0.9rem;
+  background: var(--color-bubble);
+  border-radius: 1rem 1rem 1rem 0.25rem;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
 .qr {
-  margin-top: 1.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 16rem;
+  margin: 1rem 0 0;
+  text-align: center;
 }
 
 .qr img {
@@ -174,4 +280,28 @@ textarea:focus-visible {
   height: auto;
   background: #fff;
   border-radius: 0.5rem;
+}
+
+.actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.5rem;
+  margin-top: 1.25rem;
+}
+
+.button-wide {
+  grid-column: 1 / -1;
+}
+
+.result {
+  scroll-margin-top: 1rem;
+}
+
+/* The heading only receives focus from code, to announce the result. */
+.result h2:focus {
+  outline: none;
+}
+
+.copy-fallback input {
+  margin-top: 0.5rem;
 }

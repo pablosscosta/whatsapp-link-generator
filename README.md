@@ -25,8 +25,15 @@ atendente pode perder a comissão.
 - Número de destino em qualquer formato comum (`(11) 90000-0000`, `+55 11 90000-0000`), com validação
   de DDD e do tamanho de celular e fixo.
 - Mensagem pronta opcional, de até 500 caracteres, com acentos, emojis e quebras de linha.
-- Link `wa.me` com botões para copiar e abrir no WhatsApp.
+- Resumo legível do resultado: o número formatado (`+55 (11) 90000-0000`) e a mensagem num balão,
+  para conferir antes de divulgar.
 - QR code exibido na tela e para baixar em PNG (1024 px) ou SVG.
+- Botões para copiar o link (o botão confirma com "Copiado!") e abrir no WhatsApp. Se a cópia
+  automática falhar, o link aparece num campo para copiar à mão.
+- **Compartilhar** no celular: abre o menu de compartilhamento do aparelho com a imagem do QR code e o
+  link, pronto para o status do WhatsApp. O botão só aparece onde o navegador oferece esse recurso.
+- No celular, a página rola até o resultado e o foco vai para ele (leitores de tela o anunciam). No
+  desktop, formulário e resultado ficam lado a lado.
 - Ao editar o formulário, o resultado anterior some, para não divulgar um link desatualizado.
 
 O link e o QR code **não expiram** e não dependem deste site: o QR code guarda o próprio link
@@ -77,10 +84,12 @@ npm test            # modo watch
 npm test -- --run   # uma vez, como no CI
 ```
 
-- **Regras (`src/lib/`)**: normalização e validação do número (formatos, DDI, DDD, celular e fixo) e
-  montagem do link (codificação de acentos, emojis, quebras de linha e caracteres reservados).
-- **Interface (`src/App.test.tsx`)**: o fluxo do usuário com Testing Library — gerar link e QR code,
-  erros de validação, copiar (sucesso e falha), baixar PNG e SVG e falha na geração do QR code.
+- **Regras (`src/lib/`)**: normalização, validação e formatação do número (formatos, DDI, DDD,
+  celular e fixo), montagem do link (acentos, emojis, quebras de linha e caracteres reservados),
+  geração do QR code em SVG e PNG e conversão do PNG em arquivo.
+- **Interface (`src/App.test.tsx`)**: o fluxo do usuário com Testing Library — resumo e QR code,
+  erros de validação, copiar (confirmação, volta do botão e falha), downloads, compartilhar (com
+  imagem, só link, cancelado, falha e navegador sem suporte), foco e rolagem até o resultado.
 
 O CI roda lint, verificação de formatação, testes e build em todo PR.
 
@@ -89,12 +98,15 @@ O CI roda lint, verificação de formatação, testes e build em todo PR.
 - **Começar sem backend:** o problema principal se resolve no navegador; infraestrutura só entra com
   necessidade comprovada ([ADR 0001](docs/adr/0001-mvp-estatico-e-hospedagem.md)).
 - **Hospedagem escolhida pelo caminho crítico:** quem escaneia o QR não pode esperar um servidor
-  acordar, o que descartou planos gratuitos com cold start longo.
-- **Fora do Netlify de propósito:** o plano gratuito divide créditos com o site do portfólio.
+  acordar, o que descartou planos gratuitos com cold start longo. O Netlify ficou de fora de propósito:
+  o plano gratuito divide créditos com o site do portfólio.
+- **Compartilhar sem dependência:** a [Web Share API](https://developer.mozilla.org/docs/Web/API/Navigator/share)
+  do navegador manda a imagem e o link direto para o WhatsApp. Fechar o menu sem escolher não é tratado
+  como erro, e o botão some onde o recurso não existe, em vez de falhar.
 - **Regras em funções puras:** validação do número e montagem do link ficam fora dos componentes, com
   testes unitários rápidos; os componentes só cuidam da interface.
-- **Erros visíveis, nunca engolidos:** falhas ao copiar ou ao gerar o QR code aparecem para o usuário
-  com uma alternativa (copiar manualmente, baixar o SVG).
+- **Erros visíveis, nunca engolidos:** falhas ao copiar, compartilhar ou gerar o QR code aparecem para
+  o usuário com uma alternativa (copiar o link à mão, copiar em vez de compartilhar).
 
 ## Próximos passos
 
