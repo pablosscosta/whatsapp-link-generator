@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react';
 import type { QrCodeState } from '../hooks/useQrCode';
+import { useShare } from '../hooks/useShare';
 import { QR_FILE_NAME } from '../lib/qrCode';
+import { getShareData } from '../lib/share';
 import type { WhatsAppLink } from '../lib/whatsappLink';
 
 type CopyStatus = 'idle' | 'copied' | 'failed';
@@ -14,6 +16,11 @@ type ResultActionsProps = {
 
 export function ResultActions({ link, qrCode }: ResultActionsProps) {
   const [copyStatus, setCopyStatus] = useState<CopyStatus>('idle');
+  const { share, failed: shareFailed } = useShare();
+  const shareData = getShareData(
+    link.url,
+    qrCode.status === 'ready' ? qrCode.images.pngFile : null,
+  );
 
   // "Copiado!" replaces the button label for a moment, then the button resets.
   useEffect(() => {
@@ -41,11 +48,16 @@ export function ResultActions({ link, qrCode }: ResultActionsProps) {
       <div className="actions">
         <button
           type="button"
-          className="button button-primary button-wide"
+          className={shareData ? 'button button-primary' : 'button button-primary button-wide'}
           onClick={() => void copyLink()}
         >
           {copyStatus === 'copied' ? 'Copiado!' : 'Copiar link'}
         </button>
+        {shareData && (
+          <button type="button" className="button" onClick={() => void share(shareData)}>
+            Compartilhar
+          </button>
+        )}
         {qrCode.status === 'ready' && (
           <>
             <a className="button" href={qrCode.images.pngUrl} download={`${QR_FILE_NAME}.png`}>
@@ -64,6 +76,11 @@ export function ResultActions({ link, qrCode }: ResultActionsProps) {
       <p className="visually-hidden" role="status">
         {copyStatus === 'copied' ? 'Link copiado!' : ''}
       </p>
+      {shareFailed && (
+        <p className="error" role="alert">
+          Não foi possível compartilhar. Copie o link ou baixe o QR code.
+        </p>
+      )}
       {copyStatus === 'failed' && (
         <div className="copy-fallback">
           <p className="error" role="alert">

@@ -20,9 +20,21 @@ async function generateLink(
   return user;
 }
 
+function mockWebShare({ canShareFiles }: { canShareFiles: boolean }) {
+  const share = vi.fn<(data: ShareData) => Promise<void>>().mockResolvedValue(undefined);
+  Object.defineProperty(navigator, 'share', { value: share, configurable: true });
+  Object.defineProperty(navigator, 'canShare', {
+    value: () => canShareFiles,
+    configurable: true,
+  });
+  return share;
+}
+
 describe('App', () => {
   afterEach(() => {
     vi.useRealTimers();
+    Reflect.deleteProperty(navigator, 'share');
+    Reflect.deleteProperty(navigator, 'canShare');
   });
 
   it('shows who the client will talk to, the message and the QR code', async () => {
@@ -173,5 +185,55 @@ describe('App', () => {
       'download',
       'qrcode-whatsapp.svg',
     );
+  });
+
+  it('shares the QR code image with the link when the device supports it', async () => {
+    const share = mockWebShare({ canShareFiles: true });
+    const user = await generateLink('(11) 90000-0000');
+    await screen.findByRole('img', { name: 'QR code do link' });
+
+    await user.click(screen.getByRole('button', { name: 'Compartilhar' }));
+
+    expect(share).toHaveBeenCalledWith({
+      files: [expect.objectContaining({ name: 'qrcode-whatsapp.png', type: 'image/png' })],
+      text: EXPECTED_LINK,
+    });
+  });
+
+  it('shares only the link when the device cannot share images', async () => {
+    const share = mockWebShare({ canShareFiles: false });
+    const user = await generateLink('(11) 90000-0000');
+    await screen.findByRole('img', { name: 'QR code do link' });
+
+    await user.click(screen.getByRole('button', { name: 'Compartilhar' }));
+
+    expect(share).toHaveBeenCalledWith({ url: EXPECTED_LINK });
+  });
+
+  it('hides the share button when the browser cannot share', async () => {
+    await generateLink('(11) 90000-0000');
+
+    expect(screen.queryByRole('button', { name: 'Compartilhar' })).not.toBeInTheDocument();
+  });
+
+  it('shows no error when the user closes the share sheet', async () => {
+    const share = mockWebShare({ canShareFiles: true });
+    share.mockRejectedValue(new DOMException('Share canceled', 'AbortError'));
+    const user = await generateLink('(11) 90000-0000');
+
+    await user.click(screen.getByRole('button', { name: 'Compartilhar' }));
+
+    expect(screen.queryByRole('alert')).not.toBeInTheDocument();
+  });
+
+  it('tells the user when sharing fails', async () => {
+    const share = mockWebShare({ canShareFiles: true });
+    share.mockRejectedValue(new Error('Share failed'));
+    vi.spyOn(console, 'error').mockImplementation(() => undefined);
+    const user = await generateLink('(11) 90000-0000');
+
+    await user.click(screen.getByRole('button', { name: 'Compartilhar' }));
+
+    expect(screen.getByRole('alert')).toHaveTextContent('Não foi possível compartilhar');
   });
 });
