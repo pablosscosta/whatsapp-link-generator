@@ -38,6 +38,18 @@ export function normalizeBrazilianPhone(input: string): PhoneResult {
   return { ok: true, value: COUNTRY_CODE + national };
 }
 
+/**
+ * Formats a number returned by normalizeBrazilianPhone for display:
+ * "5511900000000" becomes "+55 (11) 90000-0000".
+ */
+export function formatBrazilianPhone(normalized: string): string {
+  const national = normalized.slice(COUNTRY_CODE.length);
+  const areaCode = national.slice(0, 2);
+  const subscriber = national.slice(2);
+  const lastFourStart = subscriber.length - 4;
+  return `+${COUNTRY_CODE} (${areaCode}) ${subscriber.slice(0, lastFourStart)}-${subscriber.slice(lastFourStart)}`;
+}
+
 // 12 or 13 digits starting with 55 carry the country code. An 11-digit number
 // starting with 55 is a national number from area code 55, so it is kept.
 function stripCountryCode(digits: string): string {
