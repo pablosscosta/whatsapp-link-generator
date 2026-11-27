@@ -3,17 +3,16 @@
 Gerador de link e QR code que abrem o WhatsApp do cliente com o número certo e uma mensagem pronta,
 para que quem vem pela divulgação de um atendente chegue identificado.
 
-> 🚧 **Em desenvolvimento.** O repositório ainda não tem código: só a definição do projeto
-> ([CLAUDE.md](CLAUDE.md)) e a primeira decisão de arquitetura ([ADR 0001](docs/adr/0001-mvp-estatico-e-hospedagem.md)).
-
+[![CI](https://github.com/pablosscosta/whatsapp-link-generator/actions/workflows/ci.yml/badge.svg)](https://github.com/pablosscosta/whatsapp-link-generator/actions/workflows/ci.yml)
 [![Licença: MIT](https://img.shields.io/badge/licen%C3%A7a-MIT-blue.svg)](LICENSE)
-<!-- TODO(Pablo): badges de CI, React e TypeScript quando o workflow existir. -->
+![React 19](https://img.shields.io/badge/React-19-149eca)
+![TypeScript strict](https://img.shields.io/badge/TypeScript-strict-3178c6)
 
 ## Demonstração
 
-<!-- TODO(Pablo): link do GitHub Pages e GIF em docs/assets/ (dados fictícios) quando o MVP for publicado. -->
+**https://pablosscosta.github.io/whatsapp-link-generator/**
 
-Ainda não publicado.
+<!-- TODO(Pablo): GIF em docs/assets/ com dados fictícios. -->
 
 ## O problema
 
@@ -23,19 +22,21 @@ atendente pode perder a comissão.
 
 ## Funcionalidades
 
-Em desenvolvimento (MVP):
-
-- Informar o número de destino e a mensagem, com validação do formato brasileiro.
-- Gerar o link `wa.me` com a mensagem preenchida.
-- Gerar o QR code e baixar em PNG ou SVG.
+- Número de destino em qualquer formato comum (`(11) 90000-0000`, `+55 11 90000-0000`), com validação
+  de DDD e do tamanho de celular e fixo.
+- Mensagem pronta opcional, de até 500 caracteres, com acentos, emojis e quebras de linha.
+- Link `wa.me` com botões para copiar e abrir no WhatsApp.
+- QR code exibido na tela e para baixar em PNG (1024 px) ou SVG.
+- Ao editar o formulário, o resultado anterior some, para não divulgar um link desatualizado.
 
 Nada é salvo: tudo acontece no navegador.
 
 ## Tecnologias
 
 - **React + TypeScript (strict) + Vite**: SPA estática, sem servidor, com tipagem rígida.
-- **Biblioteca de QR code**: a única dependência de produção além do React; codificar QR na mão seria
-  reinventar algo complexo.
+- **[`qrcode`](https://www.npmjs.com/package/qrcode)**: a única dependência de produção além do React.
+  Gera SVG e PNG a partir do mesmo texto, que são exatamente os dois downloads; codificar QR na mão
+  seria reinventar algo complexo.
 - **Vitest + Testing Library**: testes do comportamento do usuário.
 - **ESLint + Prettier**: lint e formatação.
 - **GitHub Actions + GitHub Pages**: CI e hospedagem gratuitos, sem cold start.
@@ -56,20 +57,28 @@ divulgados ([ADR 0001](docs/adr/0001-mvp-estatico-e-hospedagem.md)).
 
 ## Como rodar localmente
 
-<!-- TODO(Pablo): conferir e testar os comandos depois do scaffold. -->
-
-Em desenvolvimento. Pré-requisito: Node 24.
+Pré-requisito: Node 24 (`.nvmrc`). Não há variáveis de ambiente.
 
 ```bash
 npm install
-npm run dev
+npm run dev     # http://localhost:5173/whatsapp-link-generator/
 ```
+
+Outros comandos: `npm run lint`, `npm run format`, `npm run build` e `npm run preview`.
 
 ## Testes
 
-<!-- TODO(Pablo): descrever a cobertura quando os testes existirem. -->
+```bash
+npm test            # modo watch
+npm test -- --run   # uma vez, como no CI
+```
 
-Em desenvolvimento: `npm test`.
+- **Regras (`src/lib/`)**: normalização e validação do número (formatos, DDI, DDD, celular e fixo) e
+  montagem do link (codificação de acentos, emojis, quebras de linha e caracteres reservados).
+- **Interface (`src/App.test.tsx`)**: o fluxo do usuário com Testing Library — gerar link e QR code,
+  erros de validação, copiar (sucesso e falha), baixar PNG e SVG e falha na geração do QR code.
+
+O CI roda lint, verificação de formatação, testes e build em todo PR.
 
 ## Decisões e aprendizados
 
@@ -78,6 +87,10 @@ Em desenvolvimento: `npm test`.
 - **Hospedagem escolhida pelo caminho crítico:** quem escaneia o QR não pode esperar um servidor
   acordar, o que descartou planos gratuitos com cold start longo.
 - **Fora do Netlify de propósito:** o plano gratuito divide créditos com o site do portfólio.
+- **Regras em funções puras:** validação do número e montagem do link ficam fora dos componentes, com
+  testes unitários rápidos; os componentes só cuidam da interface.
+- **Erros visíveis, nunca engolidos:** falhas ao copiar ou ao gerar o QR code aparecem para o usuário
+  com uma alternativa (copiar manualmente, baixar o SVG).
 
 ## Próximos passos
 

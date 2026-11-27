@@ -25,17 +25,16 @@ Não antecipar as etapas 2 e 3 no código do MVP (nada de camada de API "para de
 - React + TypeScript (strict) + Vite, nas versões estáveis atuais.
 - Node 24 (`.nvmrc`, criado junto com o scaffold).
 - Vitest + Testing Library; ESLint + Prettier.
-- Uma única dependência de produção além do React: a biblioteca de QR code.
+- Uma única dependência de produção além do React: `qrcode` (gera SVG e PNG).
 - CI e deploy: GitHub Actions → GitHub Pages.
 
 ## Comandos
 
-Serão definidos no scaffold do Vite. Esperado:
-
-- Dev: `npm run dev` (http://localhost:5173)
+- Dev: `npm run dev` (http://localhost:5173/whatsapp-link-generator/)
 - Testes: `npm test` (uma vez: `npm test -- --run`)
 - Lint/format: `npm run lint`, `npm run format`
-- Build: `npm run build`
+- Build: `npm run build` (o `base` do Vite é `/whatsapp-link-generator/`, por causa do GitHub Pages)
+- Formatação no CI: `npm run format:check`
 
 ## Convenções
 
