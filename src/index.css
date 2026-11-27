@@ -45,6 +45,12 @@ body {
   margin: 0;
 }
 
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
+}
+
 .app {
   max-width: 40rem;
   margin: 0 auto;
@@ -190,8 +196,11 @@ textarea:focus-visible {
 
 .qr {
   display: flex;
+  align-items: center;
   justify-content: center;
+  min-height: 16rem;
   margin: 1rem 0 0;
+  text-align: center;
 }
 
 .qr img {
@@ -211,6 +220,15 @@ textarea:focus-visible {
 
 .button-wide {
   grid-column: 1 / -1;
+}
+
+.result {
+  scroll-margin-top: 1rem;
+}
+
+/* The heading only receives focus from code, to announce the result. */
+.result h2:focus {
+  outline: none;
 }
 
 .copy-fallback input {

@@ -69,6 +69,32 @@ describe('App', () => {
     await expect(navigator.clipboard.readText()).resolves.toBe(EXPECTED_LINK);
   });
 
+  it('moves the focus to the result', async () => {
+    await generateLink('(11) 90000-0000');
+
+    expect(screen.getByRole('heading', { name: 'Seu link está pronto' })).toHaveFocus();
+  });
+
+  it('scrolls to the result when it is not fully visible', async () => {
+    vi.spyOn(HTMLElement.prototype, 'getBoundingClientRect').mockReturnValue({
+      top: 900,
+      bottom: 1500,
+    } as DOMRect);
+    const scrollIntoView = vi.spyOn(Element.prototype, 'scrollIntoView');
+
+    await generateLink('(11) 90000-0000');
+
+    expect(scrollIntoView).toHaveBeenCalledWith({ block: 'start' });
+  });
+
+  it('does not scroll when the result is already visible', async () => {
+    const scrollIntoView = vi.spyOn(Element.prototype, 'scrollIntoView');
+
+    await generateLink('(11) 90000-0000');
+
+    expect(scrollIntoView).not.toHaveBeenCalled();
+  });
+
   it('tells the user when copying fails', async () => {
     const user = await generateLink('(11) 90000-0000');
     vi.spyOn(navigator.clipboard, 'writeText').mockRejectedValue(new Error('denied'));

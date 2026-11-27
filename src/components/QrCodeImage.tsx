@@ -4,16 +4,23 @@ type QrCodeImageProps = {
   qrCode: QrCodeState;
 };
 
+// The QR code area keeps the same height in every state, so the page does not jump.
 export function QrCodeImage({ qrCode }: QrCodeImageProps) {
   if (qrCode.status === 'loading') {
-    return <p className="hint qr">Gerando QR code…</p>;
+    return (
+      <div className="qr">
+        <p className="hint">Gerando QR code…</p>
+      </div>
+    );
   }
 
   if (qrCode.status === 'error') {
     return (
-      <p className="error qr" role="alert">
-        Não foi possível gerar o QR code. Tente encurtar a mensagem e gerar de novo.
-      </p>
+      <div className="qr">
+        <p className="error" role="alert">
+          Não foi possível gerar o QR code. Tente encurtar a mensagem e gerar de novo.
+        </p>
+      </div>
     );
   }
 
