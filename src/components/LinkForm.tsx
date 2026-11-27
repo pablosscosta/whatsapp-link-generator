@@ -67,16 +67,19 @@ export function LinkForm({ onGenerate, onEdit }: LinkFormProps) {
           id="message"
           rows={4}
           maxLength={MESSAGE_MAX_LENGTH}
-          placeholder="Olá! Vi a promoção no status da Ana e quero ser atendido por ela."
+          placeholder="Ex.: Olá! Vim pelo seu link e gostaria de mais informações."
           value={message}
-          aria-describedby="message-count"
+          aria-describedby="message-hint message-count"
           onChange={(event) => {
             setMessage(event.target.value);
             onEdit();
           }}
         />
+        <p id="message-hint" className="hint">
+          Opcional. O cliente recebe esse texto já escrito e só precisa tocar em enviar.
+        </p>
         <p id="message-count" className="hint">
-          {message.length}/{MESSAGE_MAX_LENGTH} caracteres. Opcional.
+          {message.length}/{MESSAGE_MAX_LENGTH} caracteres
         </p>
       </div>
 

@@ -106,6 +106,6 @@ O CI roda lint, verificação de formatação, testes e build em todo PR.
 
 **Pablo Costa**
 
-- LinkedIn: https://www.linkedin.com/in/pablosilva013
-- GitHub: https://github.com/pablosscosta
-- Portfólio: https://portfolio-pablosscosta.netlify.app/
+[![LinkedIn](https://img.shields.io/badge/LinkedIn-pablosilva013-0A66C2)](https://www.linkedin.com/in/pablosilva013)
+[![GitHub](https://img.shields.io/badge/GitHub-pablosscosta-181717?logo=github&logoColor=white)](https://github.com/pablosscosta)
+[![Portfólio](https://img.shields.io/badge/Portf%C3%B3lio-portfolio--pablosscosta-0f766e)](https://portfolio-pablosscosta.netlify.app/)
