@@ -1,6 +1,7 @@
 # WhatsApp Link Generator
 
 ## Objetivo
+
 Gera um link `wa.me` e um QR code que abrem o WhatsApp do cliente já com o número de destino e uma
 mensagem pronta. Nasceu de um caso real: numa loja com um único WhatsApp para toda a equipe, o cliente
 que vem pela divulgação de um atendente precisa chegar identificado ("quero ser atendido pela Ana").
@@ -11,6 +12,7 @@ Na interface, o título é **"Gerador de link para WhatsApp"**: o "para" deixa c
 compatível, não um produto da Meta. Não usar o logo do WhatsApp.
 
 ## Etapas
+
 1. **MVP (atual):** site estático, sem backend. Número + mensagem → link `wa.me` + QR code (PNG/SVG).
    Nada é salvo.
 2. **Contas:** Django + DRF, links curtos editáveis (`/r/<slug>`) e contagem de cliques.
@@ -19,6 +21,7 @@ compatível, não um produto da Meta. Não usar o logo do WhatsApp.
 Não antecipar as etapas 2 e 3 no código do MVP (nada de camada de API "para depois").
 
 ## Stack (MVP)
+
 - React + TypeScript (strict) + Vite, nas versões estáveis atuais.
 - Node 24 (`.nvmrc`, criado junto com o scaffold).
 - Vitest + Testing Library; ESLint + Prettier.
@@ -26,13 +29,16 @@ Não antecipar as etapas 2 e 3 no código do MVP (nada de camada de API "para de
 - CI e deploy: GitHub Actions → GitHub Pages.
 
 ## Comandos
+
 Serão definidos no scaffold do Vite. Esperado:
+
 - Dev: `npm run dev` (http://localhost:5173)
 - Testes: `npm test` (uma vez: `npm test -- --run`)
 - Lint/format: `npm run lint`, `npm run format`
 - Build: `npm run build`
 
 ## Convenções
+
 - Interface em pt-BR; código, nomes e branches em inglês.
 - A montagem do link (`wa.me/<número>?text=<mensagem codificada>`) e a validação do número ficam em
   funções puras, separadas dos componentes, com testes unitários próprios.
@@ -42,6 +48,7 @@ Serão definidos no scaffold do Vite. Esperado:
 - Demo, testes e screenshots só com dados fictícios (números do tipo `11 90000-0000`).
 
 ## Hospedagem
+
 - **MVP:** GitHub Pages, publicado por workflow do GitHub Actions. Limites (conferidos em 2026-11-26):
   site de até 1 GB, banda flexível de 100 GB/mês, deploy expira em 10 min. Sem custo nem créditos.
 - **Não usar o Netlify** neste projeto: os 300 créditos do plano Free são divididos com o site do
@@ -51,10 +58,12 @@ Serão definidos no scaffold do Vite. Esperado:
 - Preços e limites mudam: conferir as páginas oficiais antes de citar números.
 
 ## Git
+
 - Commits, títulos e descrições de PR em **português** (Conventional Commits: `feat: adiciona ...`).
 - Branches em inglês (`feat/<nome>`, `fix/<nome>`, `chore/<nome>`); nunca direto na `main`.
 - Sem linhas de coautoria do Claude em commits e PRs.
 
 ## Docs
+
 - `docs/adr/`: decisões; criar um ADR novo para cada decisão relevante.
 - README no padrão da skill `/readme`; atualizar ao concluir uma etapa.

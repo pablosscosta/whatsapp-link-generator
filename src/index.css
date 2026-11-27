@@ -9,7 +9,12 @@
   --color-error: #b91c1c;
 
   color-scheme: light dark;
-  font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  font-family:
+    system-ui,
+    -apple-system,
+    'Segoe UI',
+    Roboto,
+    sans-serif;
   line-height: 1.5;
   color: var(--color-text);
   background: var(--color-bg);

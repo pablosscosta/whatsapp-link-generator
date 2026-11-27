@@ -4,6 +4,7 @@
 - **Data:** 2026-11-26
 
 ## Contexto
+
 O problema real: uma loja usa um único WhatsApp para toda a equipe. O cliente que chega pela divulgação
 de um atendente não tem como indicar com quem quer falar, e o atendente pode perder a comissão.
 
@@ -14,20 +15,21 @@ o QR e ter contas e equipes exigem.
 O link vai ser usado de verdade, e quem escaneia o QR não pode esperar o servidor acordar. Os planos
 gratuitos foram comparados em 2026-11-26, nas páginas oficiais:
 
-| Opção | O que pesou |
-|---|---|
-| Render | Dorme após 15 min e leva cerca de 1 min para acordar; Postgres gratuito expira em 30 dias |
-| Fly.io | Sempre ligado dentro de US$ 5/mês, mas exige cartão e cobra o excedente |
-| Koyeb | 1 instância gratuita sem cartão; dorme após 1 h e acorda em 1 a 5 s (número da doc geral) |
-| Railway | US$ 1/mês e sem domínio próprio no plano gratuito |
-| Vercel | Não roda Django/Rails como servidor; termos de uso comercial não confirmados |
-| Netlify | Créditos divididos com o site do portfólio; se acabarem, todos os sites saem do ar |
-| Cloudflare Workers | Sem cold start, mas obriga o backend em JS/TS |
-| Neon | Postgres gratuito permanente, 1 GB, volta do repouso em centenas de ms |
-| Supabase | Projeto gratuito pausa após 1 semana sem uso |
-| GitHub Pages | Estático, sem cold start, sem custo; não serve para hospedar um negócio online |
+| Opção              | O que pesou                                                                               |
+| ------------------ | ----------------------------------------------------------------------------------------- |
+| Render             | Dorme após 15 min e leva cerca de 1 min para acordar; Postgres gratuito expira em 30 dias |
+| Fly.io             | Sempre ligado dentro de US$ 5/mês, mas exige cartão e cobra o excedente                   |
+| Koyeb              | 1 instância gratuita sem cartão; dorme após 1 h e acorda em 1 a 5 s (número da doc geral) |
+| Railway            | US$ 1/mês e sem domínio próprio no plano gratuito                                         |
+| Vercel             | Não roda Django/Rails como servidor; termos de uso comercial não confirmados              |
+| Netlify            | Créditos divididos com o site do portfólio; se acabarem, todos os sites saem do ar        |
+| Cloudflare Workers | Sem cold start, mas obriga o backend em JS/TS                                             |
+| Neon               | Postgres gratuito permanente, 1 GB, volta do repouso em centenas de ms                    |
+| Supabase           | Projeto gratuito pausa após 1 semana sem uso                                              |
+| GitHub Pages       | Estático, sem cold start, sem custo; não serve para hospedar um negócio online            |
 
 ## Decisão
+
 - **MVP sem backend:** React + TypeScript + Vite, publicado no **GitHub Pages** pelo GitHub Actions. O
   link e o QR code são gerados no navegador e nada é salvo.
 - **Backend só na etapa de contas**, quando contar cliques virar necessidade: Django + DRF no **Koyeb**
@@ -37,6 +39,7 @@ gratuitos foram comparados em 2026-11-26, nas páginas oficiais:
   após 1 h parado. Se for inaceitável, revisar este ADR.
 
 ## Consequências
+
 - O MVP vai ao ar sem custo, sem cartão e sem cold start, e sem superfície para abuso, porque não guarda
   dados.
 - A loja pode usar o MVP imediatamente.

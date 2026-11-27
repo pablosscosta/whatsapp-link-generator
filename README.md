@@ -12,6 +12,7 @@ para que quem vem pela divulgação de um atendente chegue identificado.
 ## Demonstração
 
 <!-- TODO(Pablo): link do GitHub Pages e GIF em docs/assets/ (dados fictícios) quando o MVP for publicado. -->
+
 Ainda não publicado.
 
 ## O problema
@@ -23,6 +24,7 @@ atendente pode perder a comissão.
 ## Funcionalidades
 
 Em desenvolvimento (MVP):
+
 - Informar o número de destino e a mensagem, com validação do formato brasileiro.
 - Gerar o link `wa.me` com a mensagem preenchida.
 - Gerar o QR code e baixar em PNG ou SVG.
@@ -55,6 +57,7 @@ divulgados ([ADR 0001](docs/adr/0001-mvp-estatico-e-hospedagem.md)).
 ## Como rodar localmente
 
 <!-- TODO(Pablo): conferir e testar os comandos depois do scaffold. -->
+
 Em desenvolvimento. Pré-requisito: Node 24.
 
 ```bash
@@ -65,6 +68,7 @@ npm run dev
 ## Testes
 
 <!-- TODO(Pablo): descrever a cobertura quando os testes existirem. -->
+
 Em desenvolvimento: `npm test`.
 
 ## Decisões e aprendizados
