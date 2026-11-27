@@ -87,7 +87,10 @@ describe('App', () => {
 
     await user.type(screen.getByLabelText('Mensagem pronta'), 'Oi');
 
-    expect(screen.getByText('2/500 caracteres. Opcional.')).toBeInTheDocument();
+    expect(screen.getByText('2/500 caracteres')).toBeInTheDocument();
+    expect(screen.getByLabelText('Mensagem pronta')).toHaveAccessibleDescription(
+      /só precisa tocar em enviar/,
+    );
   });
 
   it('tells the user when the QR code cannot be generated', async () => {
