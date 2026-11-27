@@ -248,4 +248,18 @@ describe('App', () => {
 
     expect(screen.getByRole('alert')).toHaveTextContent('Não foi possível compartilhar');
   });
+
+  it('credits the author and links to the source code', () => {
+    render(<App />);
+
+    expect(screen.getByRole('heading', { name: 'Gerador de link para WhatsApp' })).toBeVisible();
+    expect(screen.getByRole('link', { name: 'Pablo Costa' })).toHaveAttribute(
+      'href',
+      'https://portfolio-pablosscosta.netlify.app/',
+    );
+    expect(screen.getByRole('link', { name: 'Código no GitHub' })).toHaveAttribute(
+      'href',
+      'https://github.com/pablosscosta/whatsapp-link-generator',
+    );
+  });
 });
