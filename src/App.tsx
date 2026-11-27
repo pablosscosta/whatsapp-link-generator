@@ -11,7 +11,6 @@ export function App() {
         <h1>Gerador de link para WhatsApp</h1>
         <p className="lead">
           Crie um link e um QR code que abrem o WhatsApp com o número certo e uma mensagem pronta.
-          Nada é salvo: tudo acontece no seu navegador.
         </p>
       </header>
 
