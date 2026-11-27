@@ -15,13 +15,21 @@ export function App() {
         </p>
       </header>
 
-      <LinkForm
-        onGenerate={setLink}
-        onEdit={() => {
-          setLink(null);
-        }}
-      />
-      {link && <LinkResult link={link} />}
+      <div className="layout">
+        <LinkForm
+          onGenerate={setLink}
+          onEdit={() => {
+            setLink(null);
+          }}
+        />
+        {link ? (
+          <LinkResult link={link} />
+        ) : (
+          <div className="card placeholder">
+            <p>O link e o QR code aparecem aqui.</p>
+          </div>
+        )}
+      </div>
 
       <footer className="hint">
         Ferramenta independente, sem vínculo com o WhatsApp ou a Meta.{' '}

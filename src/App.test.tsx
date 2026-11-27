@@ -53,6 +53,18 @@ describe('App', () => {
     );
   });
 
+  it('replaces the placeholder with the result', async () => {
+    await generateLink('(11) 90000-0000');
+
+    expect(screen.queryByText('O link e o QR code aparecem aqui.')).not.toBeInTheDocument();
+  });
+
+  it('starts with the result placeholder', () => {
+    render(<App />);
+
+    expect(screen.getByText('O link e o QR code aparecem aqui.')).toBeInTheDocument();
+  });
+
   it('shows an error and no link for an invalid number', async () => {
     await generateLink('(20) 90000-0000');
 
